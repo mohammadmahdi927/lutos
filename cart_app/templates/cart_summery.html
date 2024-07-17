@@ -1,0 +1,186 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+{% load humanize %}
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+{% if cart_products %}
+{% for p in cart_products %}
+
+<div class="container">
+	<div class="row">
+		<div class="col-lg-8 col-md-10 col-sm-12 col-xs-12 col-lg-push-2 col-md-push-1">
+			<!-- start product box -->
+			<div class="product">
+				<!-- start back arrow -->
+				<div class="header">
+					<div class="back"></div>
+				</div>
+				<!-- end back arrow -->
+				<!-- start box -->
+				<div class="main">
+					<div class="row">
+						<div class="col-lg-5 col-md-5 col-sm-5 col-xs-12">
+							<!-- start right side -->
+							<div class="right">
+								
+								{% comment %} <h2>SAMSUNG</h2> {% endcomment %}
+								<img src="{{ p.Image.url }}" alt="" />
+							</div>
+							<!-- end right side -->
+						</div>
+						<div class="col-lg-7 col-md-7 col-sm-7 col-xs-12">
+							<!-- start left side -->
+							<div class="left">
+								<h1>{{p.Name}}</h1>
+
+
+								{% if cart_products.Sale == True %}
+						
+								<h3><input disabled name="product-price" id="product-price" value="{{p.Discount}}">  تومان</h3>
+
+								{% else %}
+								<h3><input disabled name="product-price" id="product-price" value="{{p.Price}}">  تومان</h3>
+
+								{% endif %}
+
+
+							
+								<p>	{{p.Description}}
+								</p>
+								{% comment %} <p><a href="">دارای گارانتی</a></p> {% endcomment %}
+								<p>
+                                    {% with ''|center:p.Stars as range %}
+                                    {% for star in range %}
+                                        <span class="fa fa-star yellow"></span>
+
+                                    {% endfor %}
+                                	{% endwith %}<br>
+									
+								<select class="form-select" id="select{{p.id}}">
+
+									
+									
+									<option value="1">1</option>
+									<option value="2">2</option>
+									<option value="3">3</option>
+									<option value="3">4</option>><br>
+								  </select><br>
+
+									 <span class="quantities">تعداد : 
+										{% for key,value in quantities.items %}
+											{% if key|slugify == p.id|slugify %}
+												{{ value }}
+											{% endif %}
+										 {% endfor %}
+									 </span><br>
+
+									 
+
+								</div>
+							<!-- end left side -->
+						</div>
+					</div>
+				</div>
+				<!-- end box -->
+				<!-- start footer and total -->
+				<div class="footer col-lg-12 col-xs-12 p-0">
+					<div class="left col-lg-6 col-xs-6">
+						<p>
+							{% if p.Sale == True %}
+						
+							<span id="price">{{p.Discount}}</span> تومان
+							
+							{% else %}
+							<span id="price">{{p.Price}}</span> تومان
+
+							{% endif %}
+
+
+
+
+
+						</p>
+					</div>
+					<div class="right col-lg-6 col-xs-6">
+						
+						<button type="button" class="btn btn-secondry cart-edit" data-index={{p.id}}> ویرایش</button>
+						<button type="button" class="btn btn-danger delete-product" data-index={{p.id}}>حذف</button>
+						
+						
+
+					</div>
+				</div>
+				<!-- end footer and total -->
+			</div>
+			<!-- end product box -->
+		</div>
+	</div>
+</div>
+{% endfor %}
+<center><h3 style="color:white">قیمت کل : {{total}}</h3>
+<button type="button" class="btn btn-danger" >	<a href="{% url 'checkout' %}">برو برای خرید</a></button>
+</center>
+{% else %}
+there is no item
+{% endif %}
+
+
+
+
+<script>
+	
+	$(document).on('click', '.cart-edit', function(e) {
+		e.preventDefault();
+		var productid = $(this).data('index')
+		$.ajax({
+			type: 'POST',
+			url: "{% url 'update' %}",
+			data: {
+				product_id: $(this).data('index'),
+				product_qty: $('#select' +productid+ ' option:selected').text(),
+				csrfmiddlewaretoken: '{{ csrf_token }}',
+				action: 'post',
+			},
+			dataType: 'json', 
+			success: function(json) {
+				//documen.getElementById('cart_quantity').textContent = json.qty
+				//console.log(json); // Handle the successful response
+				location.reload();
+			},
+			error: function(xhr, errmsg, err) {
+				// Handle errors (if needed)
+			}
+		});
+	});
+
+
+	//<!---------------------------------for delete-->
+	$(document).on('click', '.delete-product', function(e) {
+		e.preventDefault();
+		
+		$.ajax({
+			type: 'POST',
+			url: "{% url 'delete' %}",
+			data: {
+				product_id: $(this).data('index'),
+				csrfmiddlewaretoken: '{{ csrf_token }}',
+				action: 'post',
+			},
+			dataType: 'json', 
+			success: function(json) {
+				location.reload();
+			},
+			error: function(xhr, errmsg, err) {
+				// Handle errors (if needed)
+			}
+		});
+	});
+</script>
+
+
+{% endblock %}
