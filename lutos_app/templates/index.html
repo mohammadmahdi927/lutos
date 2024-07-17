@@ -1,0 +1,353 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+{% load humanize %}
+
+
+<!-- home section starts  ----------------------------------------------------------->
+
+    <section class="home" id="home">
+
+        {% comment %} {% for p in product %}
+        
+        {% if p.Slide %}
+            there are products
+        {% else %}
+            there are no products
+        {% endif %}
+        {% endfor %} {% endcomment %}
+        
+        
+            
+                {% for slide in product %}
+                    {% if slide.Active and slide.Slide == True %}
+                        <div class="slide-container active">
+                            <div class="slide">
+                                <div class="content">
+                                    <h3>{{ slide.Name }}</h3>
+                                    <p>{{ slide.Description }}</p>
+                                    <a href="{% url 'product' slide.id %}" class="btn">افزودن به سبد خرید</a>
+                                </div>
+                                <div class="image">
+                                    <img src="{{ slide.Image.url }}" class="shoe" alt="">
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+        
+                
+                {% for slide in product %}
+                    {% if slide.Active == False and slide.Slide == True %}
+                        <div class="slide-container">
+                            <div class="slide">
+                                <div class="content">
+                                    <h3>{{ slide.Name }}</h3>
+                                    <p>{{ slide.Description }}</p>
+                                    <a href="{% url 'product' slide.id %}" class="btn">افزودن به سبد خرید</a>
+                                </div>
+                                <div class="image">
+                                    <img src="{{ slide.Image.url }}" class="shoe" alt="">
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+
+                    <div id="prev" class="fas fa-chevron-left" onclick="prev()"></div>
+                    <div id="next" class="fas fa-chevron-right" onclick="next()"></div> 
+        
+
+            
+                    
+                    
+                    
+        
+    
+        </section>
+<!--home section ends -->
+
+<!--service section starts  -------------------------------------------------------------->
+
+    <section class="service">
+    <div class="box-container">
+
+                <div class="box">
+                <i class="fas fa-shipping-fast"></i>
+                <h3>تحویل سریع</h3>
+                <p>تحویل در سه روز کاری</p>
+            </div>
+
+            <div class="box">
+                <i class="fas fa-undo"></i>
+                <h3>10 روز تعویض</h3>
+                <p>تا 10 روز مهلت تست و استفاده</p>
+            </div>
+
+            <div class="box">
+                <i class="fas fa-headset"></i>
+                <h3>پشتیبانی 24 * 7</h3>
+                <p>اپراتور های فعال شبانه روز در شبکه های اجتماعی</p>
+            </div>
+
+        </div>
+
+    </section>
+<!-- service section ends -->
+
+<!-- products section starts  -------------------------------------------------------------->
+    <section class="products" id="products">
+    <h1 class="heading"> آخرین <span>محصولات</span> </h1>
+    <div class="box-container">
+        {% for p in product %}
+            {% if p.Featured == False and p.Sale == True %}
+                    <div class="box">
+                        
+                        <img src="{{ p.Image.url }}" alt="">
+                        <div class="content">
+                            <h3>{{ p.Name }}</h3>
+                            <div class="price"><span>{{ p.Price|intcomma }}</span> {{ p.Discount|intcomma }}</div>
+                            <div class="stars">
+                                {% with ''|center:p.Stars as range %}
+                                    {% for star in range %}
+                                        <i class="fas fa-star"></i>
+                                    {% endfor %}
+                                {% endwith %}
+                            </div>
+                            <a href="{% url 'product' p.id %}" class="btn">افزودن به سبد خرید</a>
+                        </div>
+                    </div>
+                {% elif p.Featured == False and p.Sale == False  %}
+                <div class="box">
+                    
+                    <img src="{{ p.Image.url }}" alt="">
+                    <div class="content">
+                        <h3>{{i.Name}}</h3>
+                        <div class="price">{{p.Price | intcomma}}</div>
+                        <div class="stars">
+                        
+                            {% with ''|center:p.Stars as range %}
+                        
+                            {% for star in range %}
+                        
+                            <i class="fas fa-star"></i>
+                        
+                            {% endfor %}
+                            {% endwith %}
+                        
+                        </div>
+                        <a href="{% url 'product' p.id %}" class="btn">افزودن به سبد خرید</a>
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+    </section>
+
+    {% comment %} <section class="products" id="products">
+
+        <h1 class="heading"> آخرین <span>محصولات</span> </h1>
+
+        <div class="box-container">
+        {% for i in product %}
+        {% if not i.Featured %}
+            {% for p in product %}
+                {% if p.Sale == True %}
+                    <div class="box">
+                        <div class="icons">
+                            <a href="#" class="fas fa-heart"></a>
+                            <a href="#" class="fas fa-share"></a>
+                            <a href="#" class="fas fa-eye"></a>
+                        </div>
+                        <img src="{{ p.Image.url }}" alt="">
+                        <div class="content">
+                            <h3>{{p.Name}}</h3>
+                            <div class="price"><span>{{p.Price | intcomma}}</span> {{p.Discount | intcomma}}</div>
+                            <div class="stars">
+                            
+                                {% with ''|center:p.Stars as range %}
+                            
+                                    {% for star in range %}
+                            
+                                <i class="fas fa-star"></i>
+                            
+                                    {% endfor %}
+                                {% endwith %}
+                            
+                            </div>
+                            <a href="{% url 'product' p.id %}" class="btn">افزودن به سبد خرید</a>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="box">
+                        <div class="icons">
+                            <a href="#" class="fas fa-heart"></a>
+                            <a href="#" class="fas fa-share"></a>
+                            <a href="#" class="fas fa-eye"></a>
+                        </div>
+                        <img src="{{ p.Image.url }}" alt="">
+                        <div class="content">
+                            <h3>{{i.Name}}</h3>
+                            <div class="price">{{p.Price | intcomma}}</div>
+                            <div class="stars">
+                            
+                                {% with ''|center:p.Stars as range %}
+                            
+                                {% for star in range %}
+                            
+                                <i class="fas fa-star"></i>
+                            
+                                {% endfor %}
+                                {% endwith %}
+                            
+                            </div>
+                            <a href="{% url 'product' p.id %}" class="btn">افزودن به سبد خرید</a>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+        {% endfor %}
+    </section> {% endcomment %}
+
+<!-- products section ends -->
+
+<!-- featured section starts  -------------------------------------------------------------->
+
+    <section class="featured" id="featured">
+        <h1 class="heading"> محصولات <span>برجسته</span></h1>
+        {% for i in product %}
+            {% if i.Featured == True and i.Sale == True %}
+                <div class="row">
+                    <div class="image-container">
+                        <div class="small-image">
+                            <img src="{{ i.Image.url }}" class="featured-image-1" alt="">
+                            <img src="{{ i.Image1.url }}" class="featured-image-1" alt="">
+                            <img src="{{ i.Image2.url }}" class="featured-image-1" alt="">
+                            <img src="{{ i.Image3.url }}" class="featured-image-1" alt="">
+                        </div>
+                        <div class="big-image">
+                            <img src=" {{ i.Image.url }}" class="big-image-1" alt="">
+                        </div>
+                    </div>
+                    <div class="content">
+                        <h3>{{i.Name}}</h3>
+                        <div class="stars">
+                            {% with ''|center:i.Stars as range %}
+                                {% for star in range %}
+                                    <i class="fas fa-star"></i>
+                                {% endfor %}
+                            {% endwith %}
+                        </div>
+                        <p>{{i.Description}} </p>
+                        <div class="price">{{i.Discount| intcomma}}<span>{{i.Price| intcomma}}</span></div>
+                        <a href="{% url 'product' i.id %}" class="btn">افزودن به سبد خرید</a>
+                    </div>
+                </div>
+            {% elif i.Featured == True and i.Sale == False %}
+                <div class="row">
+                    <div class="image-container">
+                        <div class="small-image">
+                            <img src="{{ i.Image.url }}" class="featured-image-1" alt="">
+                            <img src="{{ i.Image1.url }}" class="featured-image-1" alt="">
+                            <img src="{{ i.Image2.url }}" class="featured-image-1" alt="">
+                            <img src="{{ i.Image3.url }}" class="featured-image-1" alt="">
+                        </div>
+                        <div class="big-image">
+                            <img src=" {{ i.Image.url }}" class="big-image-1" alt="">
+                        </div>
+                    </div>
+                    <div class="content">
+                        <h3>{{i.Name}}</h3>
+                        <div class="stars">
+                            {% with ''|center:i.Stars as range %}
+                                {% for star in range %}
+                                    <i class="fas fa-star"></i>
+                                {% endfor %}
+                            {% endwith %}
+                        </div>
+                        <p>{{i.Description}} </p>
+                        <div class="price">{{i.Price| intcomma}}</div>
+                        <a href="{% url 'product' i.id %}" class="btn">افزودن به سبد خرید</a>
+                    </div>
+                </div>
+            {% endif %}
+                
+                            
+                            
+
+                            
+                            
+        {% endfor %}
+                        
+
+        
+
+
+
+    </section>
+
+<!-- featured section ends --> 
+
+<!-- review section starts  -------------------------------------------------------------->
+    {% comment %} 
+    <section class="review" id="review">
+
+        <h1 class="heading"> بازخورد <span>مشتریان</span> </h1>
+
+        <div class="box-container">
+
+            <div class="box">
+                <img src="{{ comment.Image.url }}" alt="">
+                <h3>{{comments.Name}}</h3>
+                <p>{{comments.Description}} </p>
+                <div class="stars">
+
+
+
+            </div>
+
+        </div>
+
+    </section> {% endcomment %}
+
+<!-- review section ends -->
+
+<!-- newsletter section starts  -------------------------------------------------------------->
+
+    {% comment %} <section class="newsletter">
+
+        <div class="content">
+            <h3>خبرنامه ماهانه</h3>
+            <p>به دلیل شیوع ویروس زامبی فعالیت فروشگاه فقط به صورت آنلاین میباشد</p>
+            <form action="">
+                <input type="email" placeholder="ایمیل خود را وارد کنید" class="box">
+                <input type="submit" value="عضویت" class="btn">
+            </form>
+        </div>
+
+    </section> {% endcomment %}
+
+<!-- newsletter section ends -->
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

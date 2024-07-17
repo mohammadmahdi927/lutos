@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% load static %}
+
+
+{% block content %}
+
+<br>
+  <form method="POST" action="{% url 'search' %}">
+    {% csrf_token %}
+
+    <div class="mb-3">
+    
+    <input type="text" class="form-control" placeholder="جستجو کنید" name="search">
+  </div>
+  <center>
+    <button type="submit" class="btn btn-primary">جستجو </button>
+</center>
+  
+    </form>
+{% if searched %}
+<section class="products" id="products">
+    <div class="box-container">
+    {% for p in searched %}
+    
+            
+    <div class="box">
+        
+        <img src="{{ p.Image.url }}" alt="">
+        <div class="content">
+            <h3>{{ p.Name }}</h3>
+            {% if  p.Sale == True %}
+            <div class="price"><span>{{ p.Price|intcomma }}</span> {{ p.Discount|intcomma }}</div>
+            {% elif p.Sale == False  %}
+            <div class="price">{{p.Price | intcomma}}</div>
+
+            {% endif %}
+
+            <div class="stars">
+                {% with ''|center:p.Stars as range %}
+                    {% for star in range %}
+                        <i class="fas fa-star"></i>
+                    {% endfor %}
+                {% endwith %}
+            </div>
+            <a href="{% url 'product' p.id %}" class="btn">افزودن به سبد خرید</a>
+        </div>
+    </div>
+
+    
+    {% endfor %}
+
+</div>
+</section>
+{%endif%}
+
+
+
+{% endblock %}

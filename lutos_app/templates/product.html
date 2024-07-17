@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<br><br><br><br><br>
+
+<div class="container">
+	<div class="row">
+		<div class="col-lg-8 col-md-10 col-sm-12 col-xs-12 col-lg-push-2 col-md-push-1" style="margin-right: 18%;">
+			<!-- start product box -->
+			<div class="product">
+				<!-- start back arrow -->
+				<div class="header" style="padding: 1rem;;">
+					<div class="back" ></div>
+				</div>
+				<!-- end back arrow -->
+				<!-- start box -->
+				<div class="main">
+					<div class="row">
+						<div class="col-lg-5 col-md-5 col-sm-5 col-xs-12">
+							<!-- start right side -->
+							<div class="right">
+								
+								{% comment %} <h2>SAMSUNG</h2> {% endcomment %}
+								<img src="{{ product.Image.url }}" alt="" />
+							</div>
+							<!-- end right side -->
+						</div>
+						<div class="col-lg-7 col-md-7 col-sm-7 col-xs-12">
+							<!-- start left side -->
+							<div class="left">
+								<h1>{{product.Name}}</h1>
+								{% if cart_products.Sale == True %}
+						
+								<h3><input disabled name="product-price" id="product-price" value="{{product.Discount}}">  تومان</h3>
+
+								{% else %}
+								<h3><input disabled name="product-price" id="product-price" value="{{product.Price}}">  تومان</h3>
+
+								{% endif %}
+							
+								<p>	{{product.Description}}
+								</p>
+								{% with ''|center:product.Stars as range %}
+                                    {% for star in range %}
+                                        <span class="fa fa-star yellow"></span>
+
+                                    {% endfor %}
+                                	{% endwith %}<br>
+								{% comment %} <p><a href="">دارای گارانتی</a></p> {% endcomment %}
+								<p>
+                                    
+									  <br>
+							</div>
+							<!-- end left side -->
+						</div>
+					</div>
+				</div>
+				<!-- end box -->
+				<!-- start footer and total -->
+				<div class="footer col-lg-12 col-xs-12 p-0">
+					<div class="left col-lg-6 col-xs-6">
+						<p>
+						{% if product.Sale == True %}
+							<span id="price">{{product.Discount}}</span> تومان
+							
+						{% else %}
+						    <span id="price">{{product.Price}}</span> تومان
+						{% endif %}
+						</p>
+					</div>
+					<div class="right col-lg-6 col-xs-6" style="margin-right: 30rem;
+  margin-top: -6rem;
+  padding-bottom: 2rem;">
+						
+						<button type="button" class="btn btn-success" value="{{ product.id }}" id="add-cart">افزودن به سبد</button>
+
+					</div>
+				</div>
+				<!-- end footer and total -->
+			</div>
+			<!-- end product box -->
+		</div>
+	</div>
+</div>
+
+<br><br>
+
+
+	<script>
+		$(document).on('click', '#add-cart', function(e) {
+			e.preventDefault();
+			$.ajax({
+				type: 'POST',
+				url: "{% url 'cart_add' %}",
+				data: {
+					product_id: $('#add-cart').val(),
+					product_qty: $('#add-cart').val(),
+					csrfmiddlewaretoken: '{{ csrf_token }}',
+					action: 'post',
+				},
+				dataType: 'json', // Specify the expected data type
+				success: function(json) {
+					document.getElementById('cart_quantity').textContent = json.qty;
+					
+					location.reload();
+				},
+				error: function(xhr, errmsg, err) {
+					// Handle errors (if needed)
+				}
+			});
+		});
+	</script>
+	
+{% endblock %} 

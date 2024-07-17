@@ -1,0 +1,53 @@
+<!-- header section starts  -->
+
+<header style="background-color: #ff8f3f;" >
+
+    <div id="menu-bar" class="fas fa-bars"></div>
+
+    <a href="#" class="logo">لوتوس رایانه</a>
+
+    <nav class="navbar">
+        <a  href="{% url 'home' %}">خانه</a>
+
+        
+        <a  href="{% url 'home' %}">محصولات</a>
+        <a  href="{% url 'home' %}#featured">ویژه</a>
+        <a  href= "{% url 'category_summery'%}"> دسته ها</a>
+        <a  href= "{% url 'search'%}">جستجو</a>
+
+        {% comment %} <a  href="{% url 'home' %}">نظرات</a> {% endcomment %}
+
+        {% if user.is_authenticated %}
+        <a  href="{% url 'logout' %}">خروج از اکانت</a>
+        <a  href="{% url 'update_profile' %}">پروفایل</a>
+        <a  href="{% url 'update_info' %}">مشحصات</a>
+        {% if user.is_superuser%}
+        <a  href="{% url 'shipped_dash' %}">سفارشات ثبت شده</a>
+        <a  href="{% url 'not_shipped_dash' %}">سفارشات ثبت نشده</a>
+        
+        {% endif %}
+        {% else %}
+
+        <a href="{% url 'signup' %}">ثبت نام</a> 
+        <a  href="{% url 'login' %}">ورود به اکانت</a>
+        {% endif %}
+
+    </nav>
+
+    <div class="icons">
+        <a href="#" class="fas fa-heart"></a><span id="cart_quantity">{{ cart|length }}</span>
+        <a href=" {% url 'cart_summery' %}" class="fas fa-shopping-cart"></a>
+        {% if user.is_authenticated %}
+        <a href="{% url 'update_profile' %}" class="fas fa-user"></a>
+        {% else %}
+        {% endif %}
+
+    </div>
+
+</header>
+
+
+
+
+
+<!-- header section ends -->

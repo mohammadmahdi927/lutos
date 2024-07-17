@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+  
+  <body style="background-color: rgb(255, 106, 0);">
+    
+    <div id="login-bg" class="container-fluid">
+    </div>
+    <div class="container" id="login" >
+        <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <div class="login">
+            <h3 style="color: aliceblue;">تغییر مشخصات
+            </h3>
+                  <form method="POST" action="{% url 'update_info' %}">
+                    {% csrf_token %}
+                    <div class="form-group">
+
+                      {{ form.as_p }}<br>
+                      
+<br><br>
+<h3> مشخصات تحویل</h3>
+                      {{shipping.as_p}}
+                    </div>
+                        <button type="submit" class="btn btn-lg btn-block btn-success" style="margin-bottom: 5rem;"> ثبت</button>
+            </form>
+            
+
+           </div>
+         </div>
+       </div>
+    </div>
+
+  {% endblock  %}
+

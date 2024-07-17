@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% load static %}
+
+{% block content %}
+
+<!-- products section starts  -------------------------------------------------------------->
+
+<section class="products" id="products">
+
+    <h1 class="heading"> دسته ها  </h1>
+   
+    
+
+    {% for i in categories %}
+    <h3><a href="{% url 'category' i %}">{{i}}</a></h3>
+    {% endfor %}
+
+</section>
+
+<!-- products section ends -->
+{% endblock %}
