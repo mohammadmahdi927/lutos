@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+
+
+<div class="card">
+    <div class="card-header">
+        {{order.id}} - {{order.amout_paid}}
+
+    </div>
+    <div class="card-body">
+        email:{{order.eamil}}<br>
+        {% if order.shipped %}
+        date shipped:{{order.date_shiped}}<br>
+        {% else %}
+        dateorder : {{order.date_ordered}}<br>
+        {% endif %}
+        full name : {{ order.full_name }}<br>
+        shipping adress : <pre>{{ order.shipping_adress1 }}</pre><br>
+
+
+
+        
+        {% for item in items %}
+        {{ item.product.Name }} - {{ item.quantity }}<br>
+        {% endfor %}
+        
+        {% if not order.shipped %}
+        <form method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="shipping_status" value="true">
+            <button type="submit" class="btn btn-success">ارسال</button>
+        </form>
+        {% else %}
+        <form method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="shipping_status" value="false">
+            <button type="submit" class="btn btn-success">لغو</button>
+        </form>       
+        {% endif %} 
+  </div>
+  </div>
+
+  
+
+  {% endblock  %}

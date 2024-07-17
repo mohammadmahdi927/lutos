@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+{% load humanize %}
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+
+
+
+<div class="card">
+    <div class="card-header">
+      محصولات سفارش داده شده
+    </div>
+    <div class="card-body">
+    {% for p in cart_products %}
+        {% if p.Sale == True %}
+
+           {{p.Name}} - price:{{p.Discount}}<br>
+            
+        {% else %}
+           {{p.Name}} - price:{{p.Price|intcomma}}<br>
+            
+
+        {% endif %}
+        {% for key,value in quantities.items %}
+                {% if key|slugify == p.id|slugify %}
+                    quantitiy:{{ value }}<br><br>
+                {% endif %}
+            {% endfor %}
+    {% endfor%}
+    total:  <strong>{{total|intcomma}}</strong><br><br>
+    <a href="{% url 'cart_summery' %}">تغییر در سبد خرید</a>
+    </div>
+  </div><br><br><br>
+    <form method="POST" action="{% url 'billibg_info' %}">
+
+  <div class="card">
+    <div class="card-header">
+      shipping info
+    </div>
+    <div class="card-body">
+
+      
+         {% csrf_token %}
+      {{shipping.as_p}}
+    </div>
+  </div>
+    <button type="submit" class="btn btn-success" >پرداخت</button>
+    </form>
+
+{% endblock %}

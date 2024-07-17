@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+
+
+
+<div class="limiter">
+  <div class="container-table100">
+    <div class="wrap-table100">
+      <div class="table100">
+        <table>
+          <thead>
+            <tr class="table100-head">
+              <th class="column2">شماره سفارش</th>
+              <th class="column1">تاریخ</th>
+              <th class="column3">نام</th>
+              <th class="column4">ارسال وضعیت </th>
+
+              
+            </tr>
+          </thead>
+          <tbody>
+              {% for order in orders %}
+                <tr>
+                  <td class="column2"><a href ="{% url 'orders' order.id%}">{{order.id}}</a></td>
+                  <td class="column1">{{order.date_shiped}}</td>
+                  <td class="column3">{{order.full_name}}</td>
+                  <td>
+                    <form method="POST">
+                      {% csrf_token %}
+                      <input type="hidden" name="shipping_status" value="false">
+                      <input type="hidden" name="num" value="{{ order.id }}">
+                      <button type="submit" class="btn btn-success">true</button>
+                    </form>
+                  </td>
+              {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  {% endblock  %}
